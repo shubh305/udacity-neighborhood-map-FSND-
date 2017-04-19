@@ -1,0 +1,560 @@
+body {
+    position: relative;
+    overflow-x: hidden;
+}
+
+body,
+html {
+    height: 100%;
+}
+
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus {
+    background-color: transparent;
+}
+
+
+/*-------------------------------*/
+/*           Wrappers            */
+/*-------------------------------*/
+
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    left: 220px;
+    width: 0;
+    height: 100%;
+    margin-left: -220px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #1a1a1a;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#sidebar-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    padding-top: 70px;
+    background-color: #1c262f;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -220px;
+}
+
+
+#map-canvas {
+    height: 100%;
+    width: 100%;
+    display: block;
+    overflow: auto;
+}
+
+
+/*-------------------------------*/
+/*     Sidebar nav styles        */
+/*-------------------------------*/
+
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 220px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    position: relative;
+    line-height: 20px;
+    display: inline-block;
+    width: 100%;
+}
+
+.sidebar-nav li:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    height: 100%;
+    width: 3px;
+    background-color: #1c1c1c;
+    -webkit-transition: width .2s ease-in;
+    -moz-transition: width .2s ease-in;
+    -ms-transition: width .2s ease-in;
+    transition: width .2s ease-in;
+}
+
+.sidebar-nav li:hover:before,
+.sidebar-nav li.open:hover:before {
+    width: 100%;
+    -webkit-transition: width .2s ease-in;
+    -moz-transition: width .2s ease-in;
+    -ms-transition: width .2s ease-in;
+    transition: width .2s ease-in;
+}
+
+.sidebar-nav li a {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 10px 15px 10px 30px;
+}
+
+.sidebar-nav li a:hover,
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus,
+.sidebar-nav li.open a:hover,
+.sidebar-nav li.open a:active,
+.sidebar-nav li.open a:focus {
+    color: #fff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 20px;
+    line-height: 44px;
+}
+
+.sidebar-nav .dropdown-menu {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    background-color: #222;
+    box-shadow: none;
+}
+
+
+/*-------------------------------*/
+/*       Hamburger-Cross         */
+/*-------------------------------*/
+
+
+.hamburger {
+    position: absolute;
+    top: 20px;
+    z-index: 999;
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin-left: 15px;
+    background: transparent;
+    border: none;
+}
+
+.hamburger:hover,
+.hamburger:focus,
+.hamburger:active {
+    outline: none;
+}
+
+ul li:hover {
+    background-color: grey;
+}
+
+.hamburger.is-closed .hamb-top,
+.hamburger.is-closed .hamb-middle,
+.hamburger.is-closed .hamb-bottom,
+.hamburger.is-open .hamb-top,
+.hamburger.is-open .hamb-middle,
+.hamburger.is-open .hamb-bottom {
+    position: absolute;
+    left: 0;
+    height: 4px;
+    width: 100%;
+}
+
+.hamburger.is-closed .hamb-top,
+.hamburger.is-closed .hamb-middle,
+.hamburger.is-closed .hamb-bottom {
+    background-color: white;
+}
+
+.hamburger.is-closed .hamb-top {
+    top: 5px;
+    -webkit-transition: all .35s ease-in-out;
+}
+
+.hamburger.is-closed .hamb-middle {
+    top: 50%;
+    margin-top: -2px;
+}
+
+.hamburger.is-closed .hamb-bottom {
+    bottom: 5px;
+    -webkit-transition: all .35s ease-in-out;
+}
+
+.hamburger.is-closed:hover .hamb-top {
+    top: 0;
+    -webkit-transition: all .35s ease-in-out;
+}
+
+.hamburger.is-closed:hover .hamb-bottom {
+    bottom: 0;
+    -webkit-transition: all .35s ease-in-out;
+}
+
+.hamburger.is-open .hamb-top,
+.hamburger.is-open .hamb-middle,
+.hamburger.is-open .hamb-bottom {
+    background-color: #1a1a1a;
+}
+
+.hamburger.is-open .hamb-top,
+.hamburger.is-open .hamb-bottom {
+    top: 50%;
+    margin-top: -2px;
+}
+
+.hamburger.is-open .hamb-top {
+    -webkit-transform: rotate(45deg);
+    -webkit-transition: -webkit-transform .2s cubic-bezier(.73, 1, .28, .08);
+}
+
+.hamburger.is-open .hamb-middle {
+    display: none;
+}
+
+.hamburger.is-open .hamb-bottom {
+    -webkit-transform: rotate(-45deg);
+    -webkit-transition: -webkit-transform .2s cubic-bezier(.73, 1, .28, .08);
+}
+
+
+/*-------------------------------*/
+/*            Overlay            */
+/*-------------------------------*/
+
+
+.overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(250, 250, 250, .8);
+    z-index: 1;
+}
+
+
+/*-------------------------------*/
+/*        Other Styles           */
+/*-------------------------------*/
+
+
+.search-box {
+    -webkit-transition: width 0.6s, border-radius 0.6s, background 0.6s, box-shadow 0.6s;
+    transition: width 0.6s, border-radius 0.6s, background 0.6s, box-shadow 0.6s;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    background: #ebebeb;
+}
+
+.search-box + label .search-icon {
+    color: black;
+}
+
+.search-box:hover {
+    color: white;
+    background: #c8c8c8;
+    box-shadow: 0 0 0 5px #3d4752;
+}
+
+.search-box:hover + label .search-icon {
+    color: white;
+}
+
+.search-box:focus {
+    -webkit-transition: width 0.6s cubic-bezier(0, 1.22, 0.66, 1.39), border-radius 0.6s, background 0.6s;
+    transition: width 0.6s cubic-bezier(0, 1.22, 0.66, 1.39), border-radius 0.6s, background 0.6s;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding-left: 15px;
+    cursor: text;
+    background: #ebebeb;
+    color: black;
+}
+
+.search-box:focus + label .search-icon {
+    color: black;
+}
+
+.search-box:not(:focus) {
+    text-indent: -5000px;
+}
+
+.search-icon {
+    position: relative;
+    left: -30px;
+    color: white;
+    cursor: pointer;
+}
+
+.search-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.gm-style .gm-style-iw {
+    font-size: 18px;
+    font-family: sans-serif;
+    background-color: #1C262F;
+    padding: 20px;
+    color: white
+}
+
+.gm-style-iw a {
+    color: greenyellow;
+    text-decoration: none;
+}
+
+.gm-style-iw a:hover {
+    text-shadow: 0 0 2px rgba(255, 255, 255, 1);
+    text-decoration: underline;
+}
+
+
+/*Google Aautocomplete styles*/
+
+.pac-container {
+    border: 1px solid black;
+    border-radius: 10px;
+    -webkit-box-shadow: 10px 10px 37px 2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 10px 10px 37px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 10px 10px 37px 2px rgba(0, 0, 0, 0.75);
+}
+
+.pac-item {
+    border: 0.6px solid black;
+}
+
+.address {
+    margin-bottom: 10px;
+    margin-top: 6px;
+    font-size: 17px;
+}
+
+h1 {
+    position: absolute;
+    top: 0;
+    left: 40%;
+    color: white;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.side-display {
+    position: absolute;
+    top: 22px;
+    display: block;
+    overflow: auto;
+    width: 410px;
+    padding: 10px;
+    left: 20px;
+    z-index: 1;
+    background-color: white;
+    box-shadow: 0px 0px 52px -7px rgba(0, 0, 0, 0.75);
+}
+
+.list-view {
+    background-color: #1c262f;
+    border-radius: 6px;
+    padding: 10px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.list-view,
+.content {
+    overflow: hidden;
+    zoom: 1
+}
+
+.list-view {
+    margin-top: 15px
+}
+
+.list-view:first-child {
+    margin-top: 0
+}
+
+.heading {
+    margin: 0 0 5px
+}
+
+.list-view>.pull-left {
+    margin-right: 10px
+}
+
+.content p {
+    line-height: 1.3;
+    margin-bottom: 0;
+}
+
+.list-view:first-child {
+    margin-top: 4px;
+}
+
+.info-container {
+    max-width: 300px;
+}
+
+.info-container .info-name {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.rating {
+    color: palevioletred;
+}
+
+.image-dp {
+    width: 100%;
+    max-width: 250px;
+}
+
+.btn-default {
+    height: 40px;
+    background-color: #ebebeb;
+    border-radius: 20px;
+}
+
+.btn-default:hover {
+    height: 40px;
+    background-color: #ebebeb;
+    border-radius: 20px;
+}
+
+.btn-default:focus {
+    outline: 0!important;
+}
+
+
+/*-------------------------------*/
+/*          Media Queries        */
+/*-------------------------------*/
+
+
+@media only screen and (max-width: 760px) {
+    .search-box:focus,
+    .search-box:hover {
+        width: 140px;
+    }
+    h1 {
+        display: none;
+    }
+    .side-display {
+        position: absolute;
+        top: 10px;
+        display: block;
+        overflow: auto;
+        width: 270px;
+        left: 10px;
+        z-index: 1;
+        font-size: small;
+    }
+    .content p {
+        font-size: 10px!important;
+    }
+    .pull-left {
+        width: 60px;
+    }
+    #wrapper.toggled {
+        padding-left: 290px;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        width: 290px;
+    }
+    .heading {
+        font-size: 15px;
+        word-wrap: break-word;
+    }
+    .info-container {
+        max-width: 100px;
+    }
+    .info-container .info-name {
+        font-size: 10px;
+    }
+    #load-error {
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        display: block;
+        overflow: auto;
+        color: white;
+        background-color: #e20000;
+    }
+    h2 {
+        margin-bottom: 20px;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-align: center;
+        font-size: 18px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .side-display {
+        height: 920px;
+    }
+    #wrapper.toggled {
+        padding-left: 460px;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        width: 460px;
+    }
+    .search-box:focus,
+    .search-box:hover {
+        width: 300px;
+    }
+    #load-error {
+        height: 100%;
+        width: 100%;
+        padding-right: 20%;
+        padding-left: 40%;
+        display: block;
+        overflow: auto;
+        color: white;
+        font-size: 18px;
+        background-color: #e20000;
+    }
+    h2 {
+        margin-bottom: 20px;
+        color: black;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-align: center;
+        font-weight: 500;
+        margin-left: 6px;
+        margin-right: 15px;
+    }
+}
