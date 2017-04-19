@@ -1,5 +1,5 @@
 # Neighborhood Map Project
-Neighborhood Map project Item in the Udacity Full stack web developer Nanodegree built using Knockout.JS' MV-VM Pattern.
+Neighborhood Map project in the Udacity Full stack web developer Nanodegree built using Knockout.JS' MV-VM Pattern.
  
 # Instructions:
 
