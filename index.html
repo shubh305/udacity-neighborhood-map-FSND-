@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Neighboorhood Map</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" /> </head>
+    <link rel="stylesheet" href="css/style.css" /> </head>
 
 <body>
     <div id="wrapper">
@@ -16,12 +17,19 @@
         <!-- Sidebar -->
         <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper">
             <div class="container-fluid">
-                <div data-bind="visible: displayPlaces">
+                <div>
                     <div class="side-display">
                         <h2>Displaying Search Results</h2>
-                        <div data-bind="foreach: placeList">
+                        <div id="filterQuery">
+                            <input data-bind="value: filterSearch,attr: {placeholder: filterPlaceholder}" class="filter-box">
+                            <button class="btn btn-default filter-icon" data-bind="click: $root.filterQuery"><i class="glyphicon glyphicon-search"></i></button>
+                            <button class="btn btn-default filter-clear" data-bind="click: $root.clearFilter">Clear Fliter</button>
+                        </div>
+                        <div class="display-error" id="search-error">
+                            <h4>Error : No filter given, Please click "Clear Filter" and try again!</h4> </div>
+                        <div data-bind="foreach: filteredList">
                             <div class="list-view" data-bind="click: $root.focusMarker">
-                                <a class="pull-left" href="#" target="_parent"><img alt="image" class="img-responsive img-rounded" data-bind="attr: {src: imgSrc}"></a>
+                                <a class="pull-left" href="#" target="_parent"><img src="" alt="image" class="img-responsive img-rounded broken-image" data-bind="attr: {src: imgSrc}"></a>
                                 <div class="content">
                                     <h4 class="heading" data-bind="text: name"></h4>
                                     <p data-bind="text: category"></p>

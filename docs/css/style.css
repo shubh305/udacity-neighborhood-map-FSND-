@@ -314,6 +314,57 @@ ul li:hover {
     text-indent: -5000px;
 }
 
+.filter {
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+.filter-box {
+    -webkit-transition: width 0.6s, border-radius 0.6s, background 0.6s, box-shadow 0.6s;
+    transition: width 0.6s, border-radius 0.6s, background 0.6s, box-shadow 0.6s;
+    width: 200px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    background: #ebebeb;
+    padding-left: 10px;
+}
+
+.filter-box + label .filter-icon {
+    color: black;
+}
+
+.filter-box:focus {
+    -webkit-transition: width 0.6s cubic-bezier(0, 1.22, 0.66, 1.39), border-radius 0.6s, background 0.6s;
+    transition: width 0.6s cubic-bezier(0, 1.22, 0.66, 1.39), border-radius 0.6s, background 0.6s;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: text;
+    background: #ebebeb;
+    color: black;
+}
+
+.filter-icon {
+    position: relative;
+    left: -42px;
+    color: black;
+    cursor: pointer;
+}
+
+.filter-clear {
+    background-color: #1C262F!important;
+    color: white;
+    border: none;
+}
+
+.filter-clear:hover, .filter-clear:focus {
+    background-color: #455A6C!important;
+    color: white;
+    border: none;
+}
+
 .search-icon {
     position: relative;
     left: -30px;
@@ -345,6 +396,43 @@ ul li:hover {
     text-decoration: underline;
 }
 
+
+img.broken-image {
+  position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+img.broken-image:before {
+  content: " ";
+  display: block;
+
+  position: absolute;
+  left: 0;
+  height: calc(100% + 10px);
+  width: 100%;
+  background-color: rgb(235, 235, 235);
+  border: 2px dotted rgb(200, 200, 200);
+  border-radius: 5px;
+}
+
+img.broken-image:after {
+  content: "\f127" " Broken Image";
+
+  display: block;
+    font-family: FontAwesome;
+  font-size: 16px;
+  font-style: normal;
+  color: rgb(100, 100, 100);
+
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+
+}
 
 /*Google Aautocomplete styles*/
 
@@ -460,6 +548,15 @@ h1 {
     outline: 0!important;
 }
 
+.display-error {
+    color: red;
+    padding: 10px;
+}
+
+#filterQuery {
+    margin-bottom: 10px;
+    padding: 10px;
+}
 
 /*-------------------------------*/
 /*          Media Queries        */
@@ -470,6 +567,12 @@ h1 {
     .search-box:focus,
     .search-box:hover {
         width: 140px;
+    }
+    .filter-box{
+        width: 155px;
+    }
+    .filter-clear {
+        margin-top: 10px;
     }
     h1 {
         display: none;
@@ -524,6 +627,10 @@ h1 {
 }
 
 @media only screen and (min-width: 768px) {
+
+img.broken-image:after {
+    padding-top: 25px;
+}
     .side-display {
         height: 920px;
     }

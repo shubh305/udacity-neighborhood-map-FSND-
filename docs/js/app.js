@@ -7,8 +7,8 @@ var displaySearchResults = function(item) {
     this.category = ko.observable(item.venue.categories[0].name);
     this.address = ko.observable(item.venue.location.formattedAddress);
     this.rating = ko.observable(item.venue.rating);
-    this.imgSrc = ko.observable('https://irs0.4sqi.net/img/general/100x100' + item.venue.photos.groups[0].items[0].suffix);
-}
+    this.imgSrc = ko.observable('https://irs0.4sqi.net/img/general/100x100' + item.venue.photos.groups[0].items[0].suffix || 'Broken Image');
+};
 
 // *******************************
 // *         VIEW MODEL          *
@@ -20,7 +20,10 @@ var ViewModel = function() {
     self.placeList = ko.observableArray([]);
     this.defaultLocation = ko.observable("Paris");
     this.defaultThing = ko.observable("Restaurant");
-    self.displayPlaces = ko.observable('true');
+    self.filterPlaceholder = ko.observable('Filter search results'); // placeholder for filter input
+    self.filterSearch = ko.observable('');
+    self.placeList = ko.observableArray([]); // list of all the places retreived via foursqare API
+    self.filteredList = ko.observableArray([]); // filtered places
     var infoWindow = new google.maps.InfoWindow();
 
     function resetMarkers() {
@@ -38,9 +41,9 @@ var ViewModel = function() {
             var bounds_target = new google.maps.LatLngBounds(
                 new google.maps.LatLng(bounds_suggested.sw.lat, bounds_suggested.sw.lng),
                 new google.maps.LatLng(bounds_suggested.ne.lat, bounds_suggested.ne.lng));
-            neighborMap.fitBounds(bounds_target);
+            myMap.fitBounds(bounds_target);
             // center the map
-            neighborMap.setCenter(bounds_target.getCenter());
+            myMap.setCenter(bounds_target.getCenter());
         }
 
     }
@@ -61,27 +64,27 @@ var ViewModel = function() {
         $.getJSON(FourSquareAPIcall, function(data) {
 
             var places = data.response.groups[0].items;
-            setMapBoundry(data.response.suggestedBounds)
-            for (var i = 0; i < places.length; i++) {
-                var item = places[i];
-                // just add those items in list which has picture
-                if (item.venue.photos.groups.length !== 0) {
-                    self.placeList.push(new displaySearchResults(item));
-                    allPlaces.push(item.venue);
-                }
-            }
+            setMapBoundry(data.response.suggestedBounds);
+            //loop the place to push the place item to the array placeList
+            places.forEach(function(item) {
+                self.placeList.push(new displaySearchResults(item));
+                allPlaces.push(item.venue);
+            });
+            self.filteredList(self.placeList());
+            // loop the array placeList to set markers for place returned by foursquare
+
             // sort the list based on ranking
             self.placeList.sort(function(left, right) {
-                return left.rating() === right.rating() ? 0 : (left.rating() > right.rating() ? -1 : 1)
+                return left.rating() === right.rating() ? 0 : (left.rating() > right.rating() ? -1 : 1);
             });
             // create marker for all places on map
             pinPoster(allPlaces);
         }).error(function(e) {
-            $('.side-display').hide()
-			$('#load-error').html('<h4>Error : Bad Search, Please reload and try again!</h4>')
+            $('.side-display').hide();
+			$('#load-error').html('<h4>Error : Bad Search, Please reload and try again!</h4>');
         });
 
-    }
+    };
 
     self.searchPlaces();
     //Info Window
@@ -97,7 +100,7 @@ var ViewModel = function() {
 
         google.maps.event.addListener(marker, 'click', function() {
             infoWindow.setContent(contentString);
-            infoWindow.open(neighborMap, marker);
+            infoWindow.open(myMap, marker);
         });
     }
 
@@ -109,30 +112,40 @@ var ViewModel = function() {
         var name = placeData.name; // name
         var pinImage = new google.maps.MarkerImage("http://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Marker-Outside-Azure-icon.png"); //Pin icon by Icons
 
-        if (typeof google !== "undefined") {
-            var marker = new google.maps.Marker({
-                map: neighborMap,
-                icon: pinImage,
-                position: new google.maps.LatLng(latitude, longitude),
-                animation: google.maps.Animation.DROP,
-                title: name
-            });
-            Markers.push(marker);
-            setInfoWindow(placeData, marker)
+        var marker = new google.maps.Marker({
+            map: myMap,
+            icon: pinImage,
+            position: new google.maps.LatLng(latitude, longitude),
+            animation: google.maps.Animation.DROP,
+            title: name
+        });
+        Markers.push(marker);
+        setInfoWindow(placeData, marker);
+
+        function toggleBounce () {
+        if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+        }
+        else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
         }
 
-
+        // Add click listener to toggle bounce
+        google.maps.event.addListener(marker, 'click', function () {
+            toggleBounce();
+            setTimeout(toggleBounce, 1500);
+        });
     }
-
 
 
     //create marker based on places received from api
     function pinPoster(Places) {
         // call createMapMarker for places
-        for (var i in Places) {
-            createMapMarker(Places[i]);
+        for (var i = 0; i < Places.length; i++) {
+                createMapMarker(Places[i]);
+            }
         }
-    }
 
     //When list item clicked on UI then call this function
     self.focusMarker = function(venue) {
@@ -140,11 +153,43 @@ var ViewModel = function() {
         for (var i = 0; i < Markers.length; i++) {
             if (Markers[i].title === venueName) {
                 google.maps.event.trigger(Markers[i], 'click');
-                neighborMap.panTo(Markers[i].position);
+                myMap.panTo(Markers[i].position);
             }
         }
 
-    }
+    };
+
+    //filter function
+    self.filterQuery = function() {
+        var filterInput = self.filterSearch().toLowerCase();
+        if (!filterInput) {
+           $('#search-error').show();
+        } else {
+            self.filteredList([]);
+            //Iterate through the Markers array and place the marker on the map if the filter matches.
+            for (var place = 0, l = self.placeList().length; place < l; place++) {
+                if (self.placeList()[place].name().toLowerCase().indexOf(filterInput) !== -1) {
+                    self.filteredList.push(self.placeList()[place]);
+                    Markers[place].setMap(map);
+                } else {
+                    if (self.placeList()[place].name().toLowerCase().indexOf(filterInput) === -1) {
+                        Markers[place].setMap(null);
+                        self.filterSearch('');
+
+                    }
+                }
+            }
+        }
+    };
+    // function for clearing filter inputs
+    self.clearFilter = function() {
+        $('#search-error').hide();
+        self.filteredList(self.placeList());
+        self.fliteredMessage('Filter');
+        for (var marker = 0, l = Markers.length; marker < l; marker++) {
+            Markers[marker].setMap(map);
+        }
+    };
 
 
 };
@@ -153,7 +198,7 @@ var ViewModel = function() {
 // *         GOOGLE MAPS         *
 // *******************************
 
-var neighborMap;
+var myMap;
 
 function initMap() {
     //Styles by "Mike Fowler" Apple Maps-esque  -- snazzymaps
@@ -256,7 +301,7 @@ function initMap() {
     };
     var zoomAutocomplete = new google.maps.places.Autocomplete(
         document.getElementById('search-box-2'));
-    neighborMap = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    myMap = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     $('#map-canvas').height($(window).height());
 
     ko.applyBindings(new ViewModel());
@@ -267,6 +312,8 @@ function initMap() {
 // *******************************
 
 $(document).ready(function() {
+    $('#search-error').hide();
+
     var trigger = $('.hamburger'),
         overlay = $('.overlay'),
         isClosed = false;
