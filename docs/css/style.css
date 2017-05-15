@@ -322,7 +322,7 @@ ul li:hover {
 .filter-box {
     -webkit-transition: width 0.6s, border-radius 0.6s, background 0.6s, box-shadow 0.6s;
     transition: width 0.6s, border-radius 0.6s, background 0.6s, box-shadow 0.6s;
-    width: 200px;
+    width: 220px;
     height: 40px;
     border: none;
     border-radius: 20px;
@@ -569,7 +569,7 @@ h1 {
         width: 140px;
     }
     .filter-box{
-        width: 155px;
+        width: 200px;
     }
     .filter-clear {
         margin-top: 10px;

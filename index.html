@@ -20,14 +20,14 @@
                 <div>
                     <div class="side-display">
                         <h2>Displaying Search Results</h2>
-                        <div id="filterQuery">
+                        <div id="filteredArray">
                             <input data-bind="value: filterSearch,attr: {placeholder: filterPlaceholder}" class="filter-box">
                             <button class="btn btn-default filter-icon" data-bind="click: $root.filterQuery"><i class="glyphicon glyphicon-search"></i></button>
                             <button class="btn btn-default filter-clear" data-bind="click: $root.clearFilter">Clear Fliter</button>
                         </div>
-                        <div class="display-error" id="search-error">
+                        <div class="display-error" data-bind="visible: searchError">
                             <h4>Error : No filter given, Please click "Clear Filter" and try again!</h4> </div>
-                        <div data-bind="foreach: filteredList">
+                        <div style="margin-top: 10px;" data-bind="foreach: filteredList">
                             <div class="list-view" data-bind="click: $root.focusMarker">
                                 <a class="pull-left" href="#" target="_parent"><img src="" alt="image" class="img-responsive img-rounded broken-image" data-bind="attr: {src: imgSrc}"></a>
                                 <div class="content">
@@ -46,13 +46,6 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <h1>Neighborhood Map</h1>
-            <form class="search-container" role="search">
-                <input id="search-box-1" class="animated zoomIn search-box" data-bind="value: defaultThing" type="search" placeholder="eg: Restaurant" required="required" />
-                <label for="search-box-1"><i class="glyphicon glyphicon-pencil search-icon"></i></label>
-                <input id="search-box-2" data-bind="value: defaultLocation" type="search" placeholder="eg: Chicago" class="animated zoomIn search-box" required="required" />
-                <label for="search-box-2"><i class="glyphicon glyphicon-road search-icon"></i></label>
-                <button type="submit" class="btn btn-default animated zoomIn" data-bind="click:searchPlaces"><i class="glyphicon glyphicon-search"></i></button>
-            </form>
             <button type="button" class="hamburger is-closed" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-middle"></span> <span class="hamb-bottom"></span> </button>
             <div id="load-error"></div>
             <div id="map-canvas"></div>

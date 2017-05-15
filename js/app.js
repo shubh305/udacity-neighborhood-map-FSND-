@@ -18,10 +18,11 @@ var ViewModel = function() {
     var self = this;
     var Markers = [];
     self.placeList = ko.observableArray([]);
-    this.defaultLocation = ko.observable("Paris");
-    this.defaultThing = ko.observable("Restaurant");
+    this.setLocation = "Paris";
+    this.setQuery= "Restaurant";
     self.filterPlaceholder = ko.observable('Filter search results'); // placeholder for filter input
     self.filterSearch = ko.observable('');
+    self.searchError = ko.observable(false); // search error visibility set to false by default
     self.placeList = ko.observableArray([]); // list of all the places retreived via foursqare API
     self.filteredList = ko.observableArray([]); // filtered places
     var infoWindow = new google.maps.InfoWindow();
@@ -54,8 +55,8 @@ var ViewModel = function() {
         resetMarkers();
         self.placeList([]);
 
-        var location = '&near=' + self.defaultLocation();
-        var query = '&query=' + self.defaultThing();
+        var location = '&near=' + self.setLocation;
+        var query = '&query=' + self.setQuery;
 
         // API call to FourSquare
         var FourSquareAPIcall = 'https://api.foursquare.com/v2/venues/explore?' + '&client_id=MDCUBH3P5TBVVMRD241BF5CDUTGT4OIREG01OYDQNK14MX0Q' + '&client_secret= DCR5WAUEQTDAMT2I3EMFNQ0XDSQMNCWXEENTN4WQWHXOGEW1' + '&v=20150102&venuePhotos=1' + location + query;
@@ -163,14 +164,15 @@ var ViewModel = function() {
     self.filterQuery = function() {
         var filterInput = self.filterSearch().toLowerCase();
         if (!filterInput) {
-           $('#search-error').show();
+           self.searchError(true);
         } else {
             self.filteredList([]);
             //Iterate through the Markers array and place the marker on the map if the filter matches.
             for (var place = 0, l = self.placeList().length; place < l; place++) {
                 if (self.placeList()[place].name().toLowerCase().indexOf(filterInput) !== -1) {
                     self.filteredList.push(self.placeList()[place]);
-                    Markers[place].setMap(map);
+                    Markers[place].setMap(myMap);
+
                 } else {
                     if (self.placeList()[place].name().toLowerCase().indexOf(filterInput) === -1) {
                         Markers[place].setMap(null);
@@ -183,11 +185,10 @@ var ViewModel = function() {
     };
     // function for clearing filter inputs
     self.clearFilter = function() {
-        $('#search-error').hide();
+        self.searchError(false);
         self.filteredList(self.placeList());
-        self.fliteredMessage('Filter');
         for (var marker = 0, l = Markers.length; marker < l; marker++) {
-            Markers[marker].setMap(map);
+            Markers[marker].setMap(myMap);
         }
     };
 
@@ -299,8 +300,6 @@ function initMap() {
         disableDefaultUI: true,
         styles: mapStyle
     };
-    var zoomAutocomplete = new google.maps.places.Autocomplete(
-        document.getElementById('search-box-2'));
     myMap = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     $('#map-canvas').height($(window).height());
 
@@ -312,8 +311,6 @@ function initMap() {
 // *******************************
 
 $(document).ready(function() {
-    $('#search-error').hide();
-
     var trigger = $('.hamburger'),
         overlay = $('.overlay'),
         isClosed = false;
